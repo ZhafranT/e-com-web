@@ -6,23 +6,23 @@ export default makeStyles((theme) => ({
   },
   toolbar: theme.mixins.toolbar,
   layout: {
-    marginTop: '5%',
+    marginTop: '9%',
     width: 'auto',
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
+    marginLeft: theme.spacing(4),
+    marginRight: theme.spacing(4),
+    [theme.breakpoints.up(600 + theme.spacing(3) * 3)]: {
       width: 600,
       marginLeft: 'auto',
       marginRight: 'auto',
     },
   },
   paper: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(5),
     marginBottom: theme.spacing(3),
     padding: theme.spacing(2),
     [theme.breakpoints.down('xs')]: {
       width: '100%',
-      marginTop: 60,
+      marginTop: 90,
     },
     [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
       marginTop: theme.spacing(6),

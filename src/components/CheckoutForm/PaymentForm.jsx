@@ -5,9 +5,47 @@ import { loadStripe } from '@stripe/stripe-js';
 
 import Review from './Review';
 
-const stripePromise = loadStripe('...');
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
-function PaymentForm({ checkoutToken, backStep }) {
+function PaymentForm({ checkoutToken, shippingData, backStep, onCaptureCheckout, nextStep, timeout }) {
+  const handleSubmit = async (event, elements, stripe) => {
+    event.preventDefault();
+
+    if (!stripe || !elements) return;
+
+    const cardElement = elements.getElement(CardElement);
+
+    const { erorr, paymentMethod } = await stripe.createPaymentMethod({ type: 'card', card: cardElement });
+
+    if (erorr) {
+      console.log(erorr);
+    } else {
+      const orderData = {
+        line_items: checkoutToken.live.line_items,
+        customer: { firstname: shippingData.firstname, lastname: shippingData.lastname, email: shippingData.email },
+        shipping: {
+          name: 'Primary',
+          street: shippingData.address1,
+          town_city: shippingData.city,
+          county_state: shippingData.shippingSubdivision,
+          postal_zip_code: shippingData.zip,
+          country: shippingData.shippingCountry,
+        },
+        fulfillment: { shipping_method: shippingData.shippingOption },
+        payment: {
+          gateway: 'stripe',
+          stripe: {
+            payment_method_id: paymentMethod.id,
+          },
+        },
+      };
+
+      onCaptureCheckout(checkoutToken.id, orderData);
+      timeout();
+      nextStep();
+    }
+  };
+
   return (
     <>
       <Review checkoutToken={checkoutToken} />
@@ -18,7 +56,7 @@ function PaymentForm({ checkoutToken, backStep }) {
       <Elements stripe={stripePromise}>
         <ElementsConsumer>
           {({ elements, stripe }) => (
-            <form>
+            <form onSubmit={(e) => handleSubmit(e, elements, stripe)}>
               <CardElement />
               <br /> <br />
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>

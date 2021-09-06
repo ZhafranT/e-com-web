@@ -82,7 +82,7 @@ function AddressForm({ checkoutToken, next }) {
                 ))}
               </Select>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} style={{ marginTop: '10px' }}>
               <InputLabel>Shipping Options</InputLabel>
               <Select value={shippingOption} fullWidth onChange={(e) => setShippingOption(e.target.value)}>
                 {options.map((option) => (
